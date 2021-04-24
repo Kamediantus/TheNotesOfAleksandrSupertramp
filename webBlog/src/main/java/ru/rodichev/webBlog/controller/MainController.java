@@ -44,7 +44,7 @@ public class MainController {
     public String aboutMe(Model model) {
         Iterable<Contact> contacts = contactRepository.getVisibleContacts();
         model.addAttribute("contacts", contacts);
-        String aboutMeInfo = blockRepository.getTextById(1L);
+        String aboutMeInfo = blockRepository.getTextByName("about us");
         model.addAttribute("text", aboutMeInfo);
         return "aboutMe";
     }

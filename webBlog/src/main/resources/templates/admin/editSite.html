@@ -21,6 +21,8 @@
     <button sec:authorize="hasRole('ROLE_ADMIN')" onclick="window.location='/admin/edit_contact'">Edit contacts</button>
     <button sec:authorize="hasRole('ROLE_SUPERTRAMP')" onclick="window.location='/notes/add'">new note</button>
 </div>
+
+<a th:href="'/admin/new_block'" class="details bottomright shadow left reverseColor">create block</a>
 <div class="fullTable bigShadow">
     <table id="customers" class="basicTable">
         <thead>

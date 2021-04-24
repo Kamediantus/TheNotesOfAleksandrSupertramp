@@ -22,4 +22,10 @@ public interface BlockRepository extends JpaRepository<BlockOfSite, Long> {
      */
     @Query(value = "SELECT * FROM T_block WHERE id = :id", nativeQuery = true)
     BlockOfSite getBlockById(@Param("id") Long id);
+
+    @Query(value = "SELECT * FROM T_block WHERE name = :name", nativeQuery = true)
+    BlockOfSite getBlockByName(@Param("name") String name);
+
+    @Query(value = "SELECT full_text from t_block where name = :name", nativeQuery = true)
+    String getTextByName(@Param("name") String name);
 }

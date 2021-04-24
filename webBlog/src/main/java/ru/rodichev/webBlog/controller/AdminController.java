@@ -95,6 +95,21 @@ public class AdminController {
         return "admin/editSite";
     }
 
+    @GetMapping("/admin/new_block")
+    public String newBlock(Model model) {
+        return "admin/newBlock";
+    }
+
+    @PostMapping("/admin/new_block")
+    public String createNewBlock(@RequestParam String newText, @RequestParam String name, Model model) {
+        BlockOfSite block = new BlockOfSite();
+        block.setFullText(newText);
+        block.setName(name);
+        block.setId(1L);
+        blockRepository.save(block);
+        return "admin/newBlock";
+    }
+
     @GetMapping("/admin/edit_site/{id}")
     public String editWebsitePage(@PathVariable("id") Long id, Model model) {
         BlockOfSite blockOfSite = blockRepository.getBlockById(id);
