@@ -17,7 +17,6 @@ import ru.rodichev.webBlog.repo.UserRepository;
 
 @Controller
 public class MainController {
-    private UserRepository userRepository;
 
     @Autowired
     private NotesRepository notesRepository;
@@ -30,13 +29,13 @@ public class MainController {
 
     @GetMapping("/")
     public String homepage(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!(auth instanceof AnonymousAuthenticationToken)) {
-            String currentUsername = auth.getName();
-            model.addAttribute("user", currentUsername);
-        }
-        Iterable<Note> notes = notesRepository.getOnlyChecked();
-        model.addAttribute("notes", notes);
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        if (!(auth instanceof AnonymousAuthenticationToken)) {
+//            String currentUsername = auth.getName();
+//            model.addAttribute("user", currentUsername);
+//        }
+//        Iterable<Note> notes = notesRepository.getOnlyChecked();
+//        model.addAttribute("notes", notes);
         return "index";
     }
 

@@ -10,23 +10,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.rodichev.webBlog.entity.Note;
 import ru.rodichev.webBlog.repo.NotesRepository;
+import ru.rodichev.webBlog.service.NotesService;
 
 @Controller
 public class ModeratorController {
 
     @Autowired
-    private NotesRepository notesRepository;
+    private NotesService notesService;
+
+//    @Autowired
+//    private NotesRepository notesRepository;
 
     @GetMapping("/moderator")
     public String moderatorPage(Model model) {
-        Iterable<Note> notes = notesRepository.getOnlyUnchecked();
-        model.addAttribute("notes", notes);
+        model.addAttribute("notes", notesService.getOnlyUnchecked());
         return "moderator/main";
     }
 
     @GetMapping("/moderate/{id}")
     public String moderDetails(@PathVariable("id") Long id, Model model) {
-        Note note = notesRepository.getById(id);
+        Note note = notesService.getNoteById(id);
         if (!note.isChecked()) {
             model.addAttribute("note", note);
         } else model.addAttribute("msg", "this note already checked");
@@ -35,13 +38,13 @@ public class ModeratorController {
 
     @PostMapping("/moderate/{id}")
     public String uploadRemarks(@PathVariable("id") Long id, @RequestParam String allRemarks, Model model) {
-        Note note = notesRepository.getById(id);
+        Note note = notesService.getNoteById(id);
         if (allRemarks == "") {
             note.setFixed(true);
             note.setFinalFullText(note.getRawFullText());
         } else note.setModerateFullText(allRemarks);
         note.setChecked(true);
-        notesRepository.save(note);
+        notesService.saveNote(note);
         return "redirect:/moderator";
     }
 
