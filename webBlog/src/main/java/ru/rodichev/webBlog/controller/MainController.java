@@ -14,6 +14,7 @@ import ru.rodichev.webBlog.repo.BlockRepository;
 import ru.rodichev.webBlog.repo.ContactRepository;
 import ru.rodichev.webBlog.repo.NotesRepository;
 import ru.rodichev.webBlog.repo.UserRepository;
+import ru.rodichev.webBlog.service.BlockService;
 
 @Controller
 public class MainController {
@@ -22,7 +23,9 @@ public class MainController {
     private NotesRepository notesRepository;
 
     @Autowired
-    private BlockRepository blockRepository;
+    private BlockService blockService;
+//    @Autowired
+//    private BlockRepository blockRepository;
 
     @Autowired
     private ContactRepository contactRepository;
@@ -43,7 +46,7 @@ public class MainController {
     public String aboutMe(Model model) {
         Iterable<Contact> contacts = contactRepository.getVisibleContacts();
         model.addAttribute("contacts", contacts);
-        String aboutMeInfo = blockRepository.getTextByName("about us");
+        String aboutMeInfo = blockService.getTextByName("about us");
         model.addAttribute("text", aboutMeInfo);
         return "aboutMe";
     }

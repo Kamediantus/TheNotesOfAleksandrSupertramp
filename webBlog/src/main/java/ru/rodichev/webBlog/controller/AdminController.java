@@ -14,6 +14,7 @@ import ru.rodichev.webBlog.entity.User;
 import ru.rodichev.webBlog.repo.BlockRepository;
 import ru.rodichev.webBlog.repo.ContactRepository;
 import ru.rodichev.webBlog.repo.UserRepository;
+import ru.rodichev.webBlog.service.BlockService;
 import ru.rodichev.webBlog.service.UserService;
 
 /**
@@ -26,7 +27,9 @@ public class AdminController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private BlockRepository blockRepository;
+    private BlockService blockService;
+//    @Autowired
+//    private BlockRepository blockRepository;
     @Autowired
     private ContactRepository contactRepository;
 
@@ -90,7 +93,7 @@ public class AdminController {
 
     @GetMapping("/admin/edit_site")
     public String editWebsitePage(Model model) {
-        Iterable<BlockOfSite> mainInfos = blockRepository.findAll();
+        Iterable<BlockOfSite> mainInfos = blockService.findAll();
         model.addAttribute("blocks", mainInfos);
         return "admin/editSite";
     }
@@ -106,27 +109,27 @@ public class AdminController {
         block.setFullText(newText);
         block.setName(name);
         block.setId(1L);
-        blockRepository.save(block);
+        blockService.saveBlock(block);
         return "admin/newBlock";
     }
 
     @GetMapping("/admin/edit_site/{id}")
     public String editWebsitePage(@PathVariable("id") Long id, Model model) {
-        BlockOfSite blockOfSite = blockRepository.getBlockById(id);
+        BlockOfSite blockOfSite = blockService.getBlockById(id);
         model.addAttribute("block", blockOfSite);
         return "admin/editBlock";
     }
 
     @PostMapping("/admin/edit_site/{id}")
     public String saveChanges(@PathVariable("id") Long id, @RequestParam(required = false) String rollback, String newText, Model model) {
-        BlockOfSite block = blockRepository.getBlockById(id);
+        BlockOfSite block = blockService.getBlockById(id);
         if (rollback != null) {
             if (block.rollback()) {
-                blockRepository.save(block);
+                blockService.saveBlock(block);
             } else model.addAttribute("msg", "rollback Error");
         } else if (newText != "") {
             if (block.setNewText(newText)) {
-                blockRepository.save(block);
+                blockService.saveBlock(block);
             } else
                 model.addAttribute("msg", "new text Error. Please check that new text is different from the previous version");
         } else model.addAttribute("msg", "there are no changes");
