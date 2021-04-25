@@ -15,6 +15,7 @@ import ru.rodichev.webBlog.repo.BlockRepository;
 import ru.rodichev.webBlog.repo.ContactRepository;
 import ru.rodichev.webBlog.repo.UserRepository;
 import ru.rodichev.webBlog.service.BlockService;
+import ru.rodichev.webBlog.service.ContactService;
 import ru.rodichev.webBlog.service.UserService;
 
 /**
@@ -24,14 +25,12 @@ import ru.rodichev.webBlog.service.UserService;
 public class AdminController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserRepository userRepository;
+
     @Autowired
     private BlockService blockService;
-//    @Autowired
-//    private BlockRepository blockRepository;
+
     @Autowired
-    private ContactRepository contactRepository;
+    private ContactService contactService;
 
     @GetMapping("/admin")
     public String userList(Model model) {
@@ -67,7 +66,7 @@ public class AdminController {
     public String updateUser(@PathVariable("id") Long id, @RequestParam String role, Model model) {
         User user = userService.findUserById(id);
         user.setRole(Role.valueOf(role));
-        userRepository.save(user);
+        userService.saveUser(user);
         model.addAttribute("user", userService.findUserById(id));
         return "admin/userEdit";
     }
@@ -76,8 +75,8 @@ public class AdminController {
     public String deleteUser(@PathVariable("id") Long id, Model model) {
         String msg;
         // disable to delete user with ROLE_ADMIN
-        if (userRepository.findUserById(id).getRole() != Role.ROLE_ADMIN) {
-            System.out.println(userRepository.findUserById(id).getRole());
+        if (userService.findUserById(id).getRole() != Role.ROLE_ADMIN) {
+            System.out.println(userService.findUserById(id).getRole());
             if (userService.deleteUser(id)) {
                 msg = "User was deleted successfully. id: " + id;
                 model.addAttribute("message", msg);
@@ -139,23 +138,23 @@ public class AdminController {
 
     @GetMapping("/admin/edit_contact")
     public String editContactsPage(Model model) {
-        Iterable<Contact> contacts = contactRepository.findAll();
+        Iterable<Contact> contacts = contactService.findAll();
         model.addAttribute("contacts", contacts);
         return "admin/listOfContacts";
     }
 
     @GetMapping("/admin/edit_contact/{id}")
     public String editContact(@PathVariable("id") Long id, Model model) {
-        Contact contact = contactRepository.getContactById(id);
+        Contact contact = contactService.getContactById(id);
         model.addAttribute("contact", contact);
         return "admin/editContact";
     }
 
     @PostMapping("/admin/edit_contact/{id}")
     public String saveChanges(@PathVariable("id") Long id, String name, String visibleText, String link, String isVisible, String description, Model model) {
-        Contact contact = contactRepository.getContactById(id);
+        Contact contact = contactService.getContactById(id);
         contact.update(name, link, visibleText, description, isVisible);
-        contactRepository.save(contact);
+        contactService.saveContact(contact);
         model.addAttribute("contact", contact);
         return "admin/editContact";
     }
@@ -168,14 +167,14 @@ public class AdminController {
     @PostMapping("admin/new_contact")
     public String createNewContact(String name, String visibleText, String link, String isVisible, @RequestParam(required = false) String description, Model model) {
         Contact contact = new Contact(name, link, visibleText, description, isVisible);
-        contactRepository.save(contact);
+        contactService.saveContact(contact);
         model.addAttribute("contact", contact);
         return "redirect:/admin/edit_contact/" + contact.getId();
     }
 
     @PostMapping("/admin/delete_contact/{id}")
     public String deleteContact(@PathVariable("id") Long id, Model model) {
-        contactRepository.delete(contactRepository.findById(id).orElseThrow());
+        contactService.delete(contactService.findById(id));
         return "redirect:/admin/edit_contact";
     }
 

@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthenticationConltroller {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -32,8 +32,8 @@ public class AuthenticationConltroller {
 
     @PostMapping("/login")
     public String postLogin(@RequestParam String username, @RequestParam String password, Model model) {
-        if (userRepository.findByUsername(username) != null) {
-            User user = userRepository.findUserByUsername(username);
+        if (userService.findByUsername(username) != null) {
+            User user = userService.findUserByUsername(username);
             if (bCryptPasswordEncoder.matches(password, bCryptPasswordEncoder.encode(user.getPassword()))) {
                 model.addAttribute("passwordError", "Please enter correct password..");
                 return "login";

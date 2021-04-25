@@ -15,20 +15,16 @@ import ru.rodichev.webBlog.repo.ContactRepository;
 import ru.rodichev.webBlog.repo.NotesRepository;
 import ru.rodichev.webBlog.repo.UserRepository;
 import ru.rodichev.webBlog.service.BlockService;
+import ru.rodichev.webBlog.service.ContactService;
 
 @Controller
 public class MainController {
 
     @Autowired
-    private NotesRepository notesRepository;
-
-    @Autowired
     private BlockService blockService;
-//    @Autowired
-//    private BlockRepository blockRepository;
 
     @Autowired
-    private ContactRepository contactRepository;
+    private ContactService contactService;
 
     @GetMapping("/")
     public String homepage(Model model) {
@@ -44,7 +40,7 @@ public class MainController {
 
     @GetMapping("/aboutUs")
     public String aboutMe(Model model) {
-        Iterable<Contact> contacts = contactRepository.getVisibleContacts();
+        Iterable<Contact> contacts = contactService.getVisibleContacts();
         model.addAttribute("contacts", contacts);
         String aboutMeInfo = blockService.getTextByName("about us");
         model.addAttribute("text", aboutMeInfo);

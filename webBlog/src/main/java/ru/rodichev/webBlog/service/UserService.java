@@ -94,7 +94,7 @@ public class UserService implements UserDetailsService {
      * @param user which will be saved id db
      * @return true if the save was successful, false if the user does not exist
      */
-    public boolean saveUser(User user) {
+    public boolean saveNewUser(User user) {
         User userFromDB = userRepository.findByUsername(user.getUsername());
 
         if (userFromDB != null) {
@@ -117,6 +117,18 @@ public class UserService implements UserDetailsService {
             return true;
         }
         return false;
+    }
+
+    public User findUserByUsername(String name){
+        return userRepository.findUserByUsername(name);
+    }
+
+    public void saveUser(User user){
+        userRepository.save(user);
+    }
+
+    public User findByUsername(String username){
+        return userRepository.findByUsername(username);
     }
 
 }

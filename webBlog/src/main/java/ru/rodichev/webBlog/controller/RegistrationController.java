@@ -20,9 +20,6 @@ public class RegistrationController {
     private UserService userService;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @GetMapping("/registration")
@@ -39,7 +36,7 @@ public class RegistrationController {
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
-        if (!userService.saveUser(user)) {
+        if (!userService.saveNewUser(user)) {
             model.addAttribute("usernameError", "A user with the same name already exists.");
             return "registration";
         }
@@ -56,7 +53,7 @@ public class RegistrationController {
     @PostMapping("/changePass")
     public String updatePass(@RequestParam String previousPass, @RequestParam String newPass, @RequestParam String confirmNewPass, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findUserByUsername(auth.getName());
+        User user = userService.findUserByUsername(auth.getName());
         model.addAttribute("username", auth.getName());
         if (bCryptPasswordEncoder.matches(previousPass, bCryptPasswordEncoder.encode(user.getPassword()))) {
             model.addAttribute("msg", "Please enter correct previous password..");
@@ -64,7 +61,7 @@ public class RegistrationController {
             model.addAttribute("msg", "Password mismatch..");
         } else {
             user.setPassword(bCryptPasswordEncoder.encode(newPass));
-            userRepository.save(user);
+            userService.saveUser(user);
             model.addAttribute("msg", "password changed successfully");
         }
         return "changePass";

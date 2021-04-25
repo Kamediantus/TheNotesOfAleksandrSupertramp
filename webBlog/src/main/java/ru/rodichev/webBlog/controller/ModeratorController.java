@@ -18,9 +18,6 @@ public class ModeratorController {
     @Autowired
     private NotesService notesService;
 
-//    @Autowired
-//    private NotesRepository notesRepository;
-
     @GetMapping("/moderator")
     public String moderatorPage(Model model) {
         model.addAttribute("notes", notesService.getOnlyUnchecked());

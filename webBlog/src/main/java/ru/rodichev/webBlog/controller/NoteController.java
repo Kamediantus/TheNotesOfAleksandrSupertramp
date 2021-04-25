@@ -16,6 +16,7 @@ import ru.rodichev.webBlog.entity.Note;
 import ru.rodichev.webBlog.logic.SearchFromRepo;
 import ru.rodichev.webBlog.repo.CommentRepository;
 import ru.rodichev.webBlog.repo.NotesRepository;
+import ru.rodichev.webBlog.service.CommentService;
 import ru.rodichev.webBlog.service.NotesService;
 
 import java.util.*;
@@ -26,11 +27,8 @@ public class NoteController {
     @Autowired
     private NotesService notesService;
 
-//    @Autowired
-//    private NotesRepository notesRepository;
-
     @Autowired
-    private CommentRepository commentRepository;
+    private CommentService commentService;
 
     @GetMapping("/notes")
     public String blog(Model model) {
@@ -84,7 +82,7 @@ public class NoteController {
             List<String> listOfTags = SearchFromRepo.parseTagsAsList(notesService.getTagsById(id));
             listOfTags.replaceAll(s -> s.trim());
             model.addAttribute("tags", listOfTags);
-            Iterable<Comment> comments = commentRepository.reverseFindById(id);
+            Iterable<Comment> comments = commentService.reverseFindById(id);
             model.addAttribute("comments", comments);
             return "note/noteDetails";
         } else return "redirect:/notes";
@@ -101,12 +99,12 @@ public class NoteController {
     public String addComment(@PathVariable(value = "id") long id, @RequestParam String fullComment, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Comment comment = new Comment(id, auth.getName(), fullComment, CurrDate.getCurrDate());
-        commentRepository.save(comment);
+        commentService.saveComment(comment);
         Optional<Note> notes = notesService.findById(id);
         ArrayList<Note> res = new ArrayList<>();
         notes.ifPresent(res::add);
         model.addAttribute("note", res);
-        Iterable<Comment> comments = commentRepository.reverseFindById(id);
+        Iterable<Comment> comments = commentService.reverseFindById(id);
         model.addAttribute("comments", comments);
         return "note/noteDetails";
     }

@@ -16,9 +16,6 @@ import ru.rodichev.webBlog.service.NotesService;
 @Controller
 public class SupertrampController {
 
-//    @Autowired
-//    private NotesRepository notesRepository;
-
     @Autowired
     private NotesService notesService;
 
