@@ -13,13 +13,13 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
      * @param id to search block of Contact
      * @return  contact that has id from param
      */
-    @Query(value = "SELECT * FROM T_contact WHERE id = :id", nativeQuery = true)
+    @Query(value = "SELECT * FROM t_contact WHERE id = :id", nativeQuery = true)
     Contact getContactById(@Param("id") Long id);
 
     /***
      * get Contacts List that have true flag in Visible field
      * @return List of Contacts that have true flag in Visible field
      */
-    @Query(value = "SELECT * FROM T_contact WHERE is_visible = 'true'", nativeQuery = true)
+    @Query(value = "SELECT * FROM t_contact WHERE is_visible = 'true'", nativeQuery = true)
     Iterable<Contact> getVisibleContacts();
 }
