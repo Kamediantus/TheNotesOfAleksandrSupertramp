@@ -25,4 +25,8 @@ public class BlockService {
     public void saveBlock(BlockOfSite block){
         blockRepository.save(block);
     }
+
+    public void delete(Long id){
+        blockRepository.deleteById(id);
+    }
 }

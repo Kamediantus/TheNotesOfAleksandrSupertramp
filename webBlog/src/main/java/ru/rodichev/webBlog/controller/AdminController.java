@@ -18,6 +18,8 @@ import ru.rodichev.webBlog.service.BlockService;
 import ru.rodichev.webBlog.service.ContactService;
 import ru.rodichev.webBlog.service.UserService;
 
+import java.util.stream.Stream;
+
 /**
  *
  */
@@ -109,7 +111,7 @@ public class AdminController {
         block.setName(name);
         block.setId(1L);
         blockService.saveBlock(block);
-        return "admin/newBlock";
+        return "redirect:/admin/edit_site";
     }
 
     @GetMapping("/admin/edit_site/{id}")
@@ -134,6 +136,12 @@ public class AdminController {
         } else model.addAttribute("msg", "there are no changes");
         model.addAttribute("block", block);
         return "admin/editBlock";
+    }
+
+    @GetMapping("/admin/delete_block/{id}")
+    public String deleteBlock(@PathVariable("id") Long id ,Model model){
+        blockService.delete(id);
+        return "redirect:/admin/edit_site";
     }
 
     @GetMapping("/admin/edit_contact")

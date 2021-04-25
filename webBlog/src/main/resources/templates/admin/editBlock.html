@@ -49,6 +49,11 @@
             <button type="submit" class="big-button">update</button>
         </div>
     </form>
+    <form class="basicText" method="get" th:action="'/admin/delete_block/' + ${block.id}">
+        <div class="submit-delete margin">
+            <button type="submit" class="big-button">delete row</button>
+        </div>
+    </form>
     <p th:text="${msg}"></p>
 </div>
 </body>
