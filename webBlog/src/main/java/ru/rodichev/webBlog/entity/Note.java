@@ -143,7 +143,7 @@ public class Note {
      * @param text String raw text
      * @return String only 1000 chars for display short text at the main page or full text if it less than 1000 chars
      */
-    public String getShortText(String text) {
+    public static String getShortText(String text) {
         if (text.length() > 1001) {
             if (text.substring(0, 1000).contains(" ")) {
                 return text.substring(0, text.substring(0, 1000).lastIndexOf(" ")) + "...";
