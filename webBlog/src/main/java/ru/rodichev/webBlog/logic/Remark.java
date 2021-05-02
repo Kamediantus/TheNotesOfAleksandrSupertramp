@@ -89,8 +89,12 @@ public class Remark implements Comparable<Remark> {
     public static List<Remark> getSortRemarks(String moderatorsText) {
         TreeSet<Remark> remarks = new TreeSet<>();
         String[] rawRemarks = moderatorsText.split("\\|\\|");
-        for (int i = 0; i < rawRemarks.length; i++) {
-            Remark remark = new Remark(rawRemarks[i]);
+//        for (int i = 0; i < rawRemarks.length; i++) {
+//            Remark remark = new Remark(rawRemarks[i]);
+//            remarks.add(remark);
+//        }
+        for(String el : rawRemarks){
+            Remark remark = new Remark(el);
             remarks.add(remark);
         }
         List<Remark> remarkList = new ArrayList<>();
