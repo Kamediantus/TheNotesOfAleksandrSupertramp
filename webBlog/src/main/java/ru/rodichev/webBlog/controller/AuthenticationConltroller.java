@@ -32,28 +32,6 @@ public class AuthenticationConltroller {
     @Autowired
     private UserService userService;
 
-//    @GetMapping("/login")
-//    public String login(Model model) {
-//        return "login";
-//    }
-
-//    @PostMapping("/login")
-//    public ResponseEntity postLogin(@RequestParam String username, @RequestParam String password, Model model) {
-////        JSONObject usersCreds = new JSONObject(creds);
-////        String email = usersCreds.getString("email");
-////        String password = usersCreds.getString("password");
-//        User user = null;
-//        try {
-//            user = userRepository.loadUserByUsername(email);
-//        } catch (UsernameNotFoundException e) {
-//            return new ResponseEntity<String>("User was not found. Please check your email.", HttpStatus.CONFLICT);
-//        }
-//        if (password.equals(user.getPassword())) {
-//            return new ResponseEntity<String>("Welcome", HttpStatus.OK);
-//        }
-//        return new ResponseEntity<String>("Bad credentials. Check your password.", HttpStatus.CONFLICT);
-//    }
-
     @PostMapping("/singIn")
     public ResponseEntity postLogin(@RequestBody String creds, Model model) {
         JSONObject usersCreds = new JSONObject(creds);
