@@ -1,10 +1,9 @@
 package ru.rodichev.webBlog.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ru.rodichev.webBlog.entity.User;
+import ru.rodichev.webBlog.entity.*;
 
 import java.util.List;
 
@@ -40,7 +39,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param username to search for users. Just username
      * @return  user which have username that equals username from param.
      */
-    @Query(value = "SELECT * FROM t_user t where t.username = :username", nativeQuery = true)
+    @Query(value = "SELECT * FROM users t where t.username = :username", nativeQuery = true)
     User findUserByUsername(@Param("username") String username);
 
 

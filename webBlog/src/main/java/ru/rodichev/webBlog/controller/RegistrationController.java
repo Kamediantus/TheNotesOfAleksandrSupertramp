@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.rodichev.webBlog.entity.User;
+import ru.rodichev.webBlog.entity.*;
 import ru.rodichev.webBlog.repo.UserRepository;
 import ru.rodichev.webBlog.service.UserService;
 

@@ -1,16 +1,18 @@
 package ru.rodichev.webBlog.controller;
 
+import antlr.*;
+import org.json.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import ru.rodichev.webBlog.entity.User;
+import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
+import ru.rodichev.webBlog.entity.*;
 import ru.rodichev.webBlog.repo.UserRepository;
 import ru.rodichev.webBlog.service.UserService;
 
@@ -25,26 +27,44 @@ public class AuthenticationConltroller {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @GetMapping("/login")
-    public String login(Model model) {
-        return "login";
-    }
+//    @GetMapping("/login")
+//    public String login(Model model) {
+//        return "login";
+//    }
 
-    @PostMapping("/login")
-    public String postLogin(@RequestParam String username, @RequestParam String password, Model model) {
-        if (userRepository.findByUsername(username) != null) {
-            User user = userRepository.findUserByUsername(username);
-            if (bCryptPasswordEncoder.matches(password, bCryptPasswordEncoder.encode(user.getPassword()))) {
-                model.addAttribute("passwordError", "Please enter correct password..");
-                return "login";
-            } else if (!bCryptPasswordEncoder.matches(password, bCryptPasswordEncoder.encode(user.getPassword()))) {
-                UserService userService = new UserService();
-                userService.loadUserByUsername(username);
-                return "redirect: /";
+//    @PostMapping("/login")
+//    public ResponseEntity postLogin(@RequestParam String username, @RequestParam String password, Model model) {
+////        JSONObject usersCreds = new JSONObject(creds);
+////        String email = usersCreds.getString("email");
+////        String password = usersCreds.getString("password");
+//        User user = null;
+//        try {
+//            user = userRepository.loadUserByUsername(email);
+//        } catch (UsernameNotFoundException e) {
+//            return new ResponseEntity<String>("User was not found. Please check your email.", HttpStatus.CONFLICT);
+//        }
+//        if (password.equals(user.getPassword())) {
+//            return new ResponseEntity<String>("Welcome", HttpStatus.OK);
+//        }
+//        return new ResponseEntity<String>("Bad credentials. Check your password.", HttpStatus.CONFLICT);
+//    }
+
+    @PostMapping("/singIn")
+    public ResponseEntity postLogin(@RequestBody String creds, Model model) {
+        JSONObject usersCreds = new JSONObject(creds);
+        String username = usersCreds.getString("username");
+        String password = usersCreds.getString("password");
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            if (!StringUtils.equals(user.getPassword(), password)) {
+                return new ResponseEntity<String>("Bad credentials. Check your password.", HttpStatus.CONFLICT);
+            } else {
+                return new ResponseEntity<String>("Welcome", HttpStatus.OK);
             }
 
-        } else model.addAttribute("loginError", "incorrect username");
-        return "login";
+        } else {
+            return new ResponseEntity<String>("User was not found. Please check your email.", HttpStatus.CONFLICT);
+        }
     }
 
     @GetMapping("/logout")
