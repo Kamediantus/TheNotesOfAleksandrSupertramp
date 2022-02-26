@@ -29,6 +29,10 @@ public class UserService implements UserDetailsService {
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    public Long getCardNumber() {
+        return  (new Date()).getTime();
+    }
+
     /***
      *
      * @param username from login page which is entered by the user

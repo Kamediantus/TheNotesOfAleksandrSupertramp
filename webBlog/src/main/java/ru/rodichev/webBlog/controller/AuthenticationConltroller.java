@@ -13,8 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
 import ru.rodichev.webBlog.entity.*;
-import ru.rodichev.webBlog.repo.UserRepository;
+import ru.rodichev.webBlog.repo.*;
 import ru.rodichev.webBlog.service.UserService;
+import ru.rodichev.webBlog.session.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +26,11 @@ public class AuthenticationConltroller {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private SessionRepository sessionRepository;
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private UserService userService;
 
 //    @GetMapping("/login")
 //    public String login(Model model) {
@@ -59,11 +64,30 @@ public class AuthenticationConltroller {
             if (!StringUtils.equals(user.getPassword(), password)) {
                 return new ResponseEntity<String>("Bad credentials. Check your password.", HttpStatus.CONFLICT);
             } else {
-                return new ResponseEntity<String>("Welcome", HttpStatus.OK);
+                CSession session = new CSession(user);
+                sessionRepository.save(session);
+                return new ResponseEntity<String>(getJsonSession(user, session), HttpStatus.OK);
             }
 
         } else {
             return new ResponseEntity<String>("User was not found. Please check your email.", HttpStatus.CONFLICT);
+        }
+    }
+
+    @PostMapping("/singUp")
+    public ResponseEntity postSingUp(@RequestBody String creds, Model model) {
+        JSONObject usersCreds = new JSONObject(creds);
+        String username = usersCreds.getString("username");
+        String password = usersCreds.getString("password");
+        String name = usersCreds.getString("name");
+        String surname = usersCreds.getString("surname");
+        User user = new User(username, password, name, surname, userService.getCardNumber(), Role.ROLE_USER);
+        User exsistUser = userRepository.findByUsername(username);
+        if (exsistUser == null) {
+            userRepository.save(user);
+                return new ResponseEntity<String>("Successful registration", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<String>("User with the same email was found. Please check your email or try to sing in.", HttpStatus.CONFLICT);
         }
     }
 
@@ -74,5 +98,13 @@ public class AuthenticationConltroller {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
         return "redirect: /";
+    }
+
+    private String getJsonSession(User user, CSession session) {
+        JSONObject json = new JSONObject();
+        json.put("username", user.getUsername());
+        json.put("role", user.getRole());
+        json.put("sessionKey", session.getSessionKey());
+        return json.toString();
     }
 }

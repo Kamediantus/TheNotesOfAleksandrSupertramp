@@ -19,12 +19,25 @@ public class User implements UserDetails {
     private String username;
     @Size(min = 2, message = "Cannot be less than 2 characters")
     private String password;
+    private String name;
+    private String surname;
+    private int phone;
+    private Long cardNumber;
     @Transient
     private String passwordConfirm;
 
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public User(String username, String password, String name, String surname, Long cardNumber, Role role) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.cardNumber = cardNumber;
+        this.role = role;
+    }
 
     public User() {
     }
@@ -94,5 +107,37 @@ public class User implements UserDetails {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public int getPhone() {
+        return phone;
+    }
+
+    public void setPhone(int phone) {
+        this.phone = phone;
+    }
+
+    public Long getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(Long cardNumber) {
+        this.cardNumber = cardNumber;
     }
 }
