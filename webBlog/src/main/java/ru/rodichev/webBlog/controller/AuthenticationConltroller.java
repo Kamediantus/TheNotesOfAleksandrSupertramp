@@ -42,8 +42,7 @@ public class AuthenticationConltroller {
             if (!StringUtils.equals(user.getPassword(), password)) {
                 return new ResponseEntity<String>("Bad credentials. Check your password.", HttpStatus.CONFLICT);
             } else {
-                CSession session = new CSession(user);
-                sessionRepository.save(session);
+                CSession session = getSessionAndRemoveOld(user);
                 return new ResponseEntity<String>(getJsonSession(user, session), HttpStatus.OK);
             }
 
@@ -84,5 +83,12 @@ public class AuthenticationConltroller {
         json.put("role", user.getRole());
         json.put("sessionKey", session.getSessionKey());
         return json.toString();
+    }
+
+    private CSession getSessionAndRemoveOld(User user) {
+        sessionRepository.deleteByUsername(user.getUsername());
+        CSession session = new CSession(user);
+        sessionRepository.save(session);
+        return session;
     }
 }
