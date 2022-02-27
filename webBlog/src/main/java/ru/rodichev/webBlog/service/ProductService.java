@@ -19,9 +19,9 @@ public class ProductService {
         calendar.add(Calendar.HOUR, this.product.getShelLife());
         long diffInMillies  = Math.abs(this.product.getDateOfProduction().getTime() - currDate.getTime());
         long diff = TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-        if (diff < this.product.getShelLifeWarning()) {
-            return true;
-        }
+//        if (diff < this.product.getShelLifeWarning()) {
+//            return true;
+//        }
         return false;
     }
 }

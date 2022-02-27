@@ -35,4 +35,9 @@ public class ProductsController {
         }
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
+
+    @GetMapping("/listProductsByStore{id}")
+    public ResponseEntity<List<Product>> getProductsByStoreId(@PathVariable(value="id") Long storeId) {
+        return new ResponseEntity<>(productsRepository.getProductsByStoreId(storeId), HttpStatus.OK);
+    }
 }

@@ -16,8 +16,6 @@ public class Product {
     private String description;
     // срок годности в часах
     private int shelLife;
-    // значение в часах, определяющее за сколько до истечения срока годности начислять скидку
-    private int shelLifeWarning;
     private double price;
     // дата изготовления. В базе не храним, эти данные хранятся в таблице поставок.
     @Transient
@@ -69,14 +67,6 @@ public class Product {
 
     public void setStoreId(Long storeId) {
         this.storeId = storeId;
-    }
-
-    public int getShelLifeWarning() {
-        return shelLifeWarning;
-    }
-
-    public void setShelLifeWarning(int shelLifeWarning) {
-        this.shelLifeWarning = shelLifeWarning;
     }
 
     public Date getDateOfProduction() {
