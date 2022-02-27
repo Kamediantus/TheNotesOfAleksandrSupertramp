@@ -1,12 +1,17 @@
 package ru.rodichev.webBlog.entity;
 
 import java.util.*;
+import java.util.concurrent.*;
 
 import javax.persistence.*;
+
+import org.springframework.beans.factory.annotation.*;
+import ru.rodichev.webBlog.repo.*;
 
 @Table(name = "orders")
 @Entity
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,8 +20,23 @@ public class Order {
     private Long productId;
     private Long storeId;
     private Date creationDate;
+    private int count;
     // булева, определяющая был ли товар куплен в период "не первой свежести". У каждого товара такой период свой
     private Boolean isBuyInWarningSpoilPeriod;
+    private Boolean isFinished;
+    @Transient
+    private Product product;
+
+    public Order(Long cardNumber, Long consumerId, Long productId, Long storeId, Date creationDate, int count, Product product, ProductLot lot) {
+        this.cardNumber = cardNumber;
+        this.consumerId = consumerId;
+        this.productId = productId;
+        this.storeId = storeId;
+        this.creationDate = creationDate;
+        this.isBuyInWarningSpoilPeriod = isExpirationDateIsComingToEnd(lot, creationDate);
+        this.count = count;
+        this.isFinished = true;
+    }
 
     public Order() {}
 
@@ -74,5 +94,40 @@ public class Order {
 
     public void setBuyInWarningSpoilPeriod(Boolean buyInWarningSpoilPeriod) {
         isBuyInWarningSpoilPeriod = buyInWarningSpoilPeriod;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    // метод определяющий был ли товар куплен в период, когда срок годности подходит к концу
+    // k - коэффициент, определяющий через сколько времени от производства товар считается "почти протухшим"
+    public boolean isExpirationDateIsComingToEnd(ProductLot lot, Date dateOfDeal) {
+        double k = 0.3;
+        long diffInHours  = TimeUnit.HOURS.convert(Math.abs(lot.getDateOfProduction().getTime() - dateOfDeal.getTime()), TimeUnit.MILLISECONDS);
+        if (diffInHours > lot.getShelLife() * 0.3) {
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean getFinished() {
+        return isFinished;
+    }
+
+    public void setFinished(Boolean finished) {
+        isFinished = finished;
     }
 }

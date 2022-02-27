@@ -28,8 +28,9 @@ public class CSession {
         this.role = user.getRole().toString();
         this.sessionKey = generateKey(user);
         this.creationDate = new Date();
-//        this.cardNumber = user.get();
+        this.cardNumber = user.getCardNumber();
         this.sessionKey = generateKey(user);
+        this.userId = user.getId();
     }
 
     public CSession() {
@@ -92,5 +93,29 @@ public class CSession {
         JSONObject json = new JSONObject();
         json.put("sessionKey", this.sessionKey);
         return json.toString();
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Long getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(Long cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }
