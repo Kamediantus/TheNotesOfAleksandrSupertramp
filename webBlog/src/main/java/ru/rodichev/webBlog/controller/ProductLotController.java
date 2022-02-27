@@ -23,13 +23,19 @@ public class ProductLotController {
         JSONObject json = new JSONObject(rawProductLot);
         ProductLot productLot = new ProductLot();
         productLot.setProductId(json.getLong("productId"));
-        productLot.setStoreIdId(json.getLong("storeId"));
+        productLot.setStoreId(json.getLong("storeId"));
         productLot.setDateOfProduction(new Date(json.getLong("produceDate")));
+        productLot.setCount(json.getInt("count"));
         Product product = productsRepository.getOne(productLot.getProductId());
         productLot.setShelLife(product.getShelLife());
         if (productLotRepository.save(productLot) != null) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
+
+    @GetMapping("/listAllProductLots")
+    public ResponseEntity<List<ProductLot>> getAllProductLots(Model model) {
+        return new ResponseEntity<>(productLotRepository.findAll(), HttpStatus.OK);
     }
 }

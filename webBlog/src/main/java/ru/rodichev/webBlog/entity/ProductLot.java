@@ -15,6 +15,7 @@ public class ProductLot {
     private Long storeId;
     private Date dateOfProduction;
     private int shelLife;
+    private int count;
 
     public ProductLot(){}
 
@@ -41,14 +42,6 @@ public class ProductLot {
         this.productId = productId;
     }
 
-    public Long getStoreIdId() {
-        return storeId;
-    }
-
-    public void setStoreIdId(Long storeIdId) {
-        this.storeId = storeIdId;
-    }
-
     public Date getDateOfProduction() {
         return dateOfProduction;
     }
@@ -63,5 +56,21 @@ public class ProductLot {
 
     public void setShelLife(int shelLife) {
         this.shelLife = shelLife;
+    }
+
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }
