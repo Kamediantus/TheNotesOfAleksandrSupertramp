@@ -114,7 +114,7 @@ public class Order {
 
     // метод определяющий был ли товар куплен в период, когда срок годности подходит к концу
     // k - коэффициент, определяющий через сколько времени от производства товар считается "почти протухшим"
-    public boolean isExpirationDateIsComingToEnd(ProductLot lot, Date dateOfDeal) {
+    public static boolean isExpirationDateIsComingToEnd(ProductLot lot, Date dateOfDeal) {
         double k = 0.3;
         long diffInHours  = TimeUnit.HOURS.convert(Math.abs(lot.getDateOfProduction().getTime() - dateOfDeal.getTime()), TimeUnit.MILLISECONDS);
         if (diffInHours > lot.getShelLife() * 0.3) {

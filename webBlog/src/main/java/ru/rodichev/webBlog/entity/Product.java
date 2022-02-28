@@ -17,6 +17,8 @@ public class Product {
     // срок годности в часах
     private int shelLife;
     private double price;
+    @Transient
+    private double personalDiscount;
     // дата изготовления. В базе не храним, эти данные хранятся в таблице поставок.
     @Transient
     private Date dateOfProduction;
@@ -71,6 +73,14 @@ public class Product {
 
     public Date getDateOfProduction() {
         return dateOfProduction;
+    }
+
+    public double getPersonalDiscount() {
+        return personalDiscount;
+    }
+
+    public void setPersonalDiscount(double personalDiscount) {
+        this.personalDiscount = personalDiscount;
     }
 
     public void setDateOfProduction(Date dateOfProduction) {
