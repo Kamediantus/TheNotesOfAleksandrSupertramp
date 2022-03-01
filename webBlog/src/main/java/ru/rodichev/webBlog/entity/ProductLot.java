@@ -16,6 +16,7 @@ public class ProductLot {
     private Date dateOfProduction;
     private int shelLife;
     private int count;
+    private Boolean active;
 
     public ProductLot(){}
 
@@ -72,5 +73,13 @@ public class ProductLot {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

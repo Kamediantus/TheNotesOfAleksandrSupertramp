@@ -23,6 +23,8 @@ public class OrderController {
     ProductsRepository productsRepository;
     @Autowired
     ProductLotRepository productLotRepository;
+    @Autowired
+    ProductLotRepository lotRepository;
 
     @PostMapping("/addOrder")
     public ResponseEntity postSingUp(@RequestBody String rawJson, Model model) {
@@ -30,7 +32,7 @@ public class OrderController {
         String sessionKey = json.getString("sessionKey");
         CSession session = sessionRepository.getSessionByKey(sessionKey);
         Long productId = json.getLong("productId");
-        ProductLot lot = getLastLot(productId);
+        ProductLot lot = lotRepository.getProductLotsByProductId(productId);
         Order order = new Order(session.getCardNumber(), session.getUserId(), productId,
                 json.getLong("storeId"), new Date(), json.getInt("count"), productsRepository.getOne(productId), lot);
         if (orderRepository.save(order) != null) {

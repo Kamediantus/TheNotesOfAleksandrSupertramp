@@ -39,7 +39,7 @@ public class ProductsController {
         products.forEach(product -> {
             product.setPersonalDiscount(getPersonalPrice(sessionKey, product.getId(), ordersByUser, date));
         });
-        return new ResponseEntity<>(productsRepository.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @PostMapping("/addProduct")
@@ -70,7 +70,11 @@ public class ProductsController {
         List<Order> freshDeal = ordersByProduct.stream().filter(pr -> !pr.getBuyInWarningSpoilPeriod()).collect(Collectors.toList());
         List<Order> notFreshDeal = ordersByProduct.stream().filter(pr -> pr.getBuyInWarningSpoilPeriod()).collect(Collectors.toList());
         ProductLot lot = productLotRepository.getProductLotsByProductId(productId);
-        if (Order.isExpirationDateIsComingToEnd(lot, date) &&
+        // если нет активной партии - скидки нет, т.к. нам неизвестна дата производства
+        if(lot == null) {
+            return personalDiscount;
+        }
+        if (!Order.isFresh(lot, date) &&
                 notFreshDeal.size() < freshDeal.size() ) {
             personalDiscount = 25d;
         }

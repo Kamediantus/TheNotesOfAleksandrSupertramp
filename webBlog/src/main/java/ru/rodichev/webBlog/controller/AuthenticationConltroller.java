@@ -86,7 +86,7 @@ public class AuthenticationConltroller {
     }
 
     private CSession getSessionAndRemoveOld(User user) {
-        sessionRepository.deleteByUsername(user.getUsername());
+//        sessionRepository.deleteByUsername(user.getUsername());
         CSession session = new CSession(user);
         sessionRepository.save(session);
         return session;

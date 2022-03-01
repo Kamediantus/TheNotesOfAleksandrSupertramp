@@ -5,9 +5,6 @@ import java.util.concurrent.*;
 
 import javax.persistence.*;
 
-import org.springframework.beans.factory.annotation.*;
-import ru.rodichev.webBlog.repo.*;
-
 @Table(name = "orders")
 @Entity
 public class Order {
@@ -33,7 +30,7 @@ public class Order {
         this.productId = productId;
         this.storeId = storeId;
         this.creationDate = creationDate;
-        this.isBuyInWarningSpoilPeriod = isExpirationDateIsComingToEnd(lot, creationDate);
+        this.isBuyInWarningSpoilPeriod = !isFresh(lot, creationDate);
         this.count = count;
         this.isFinished = true;
     }
@@ -114,13 +111,13 @@ public class Order {
 
     // метод определяющий был ли товар куплен в период, когда срок годности подходит к концу
     // k - коэффициент, определяющий через сколько времени от производства товар считается "почти протухшим"
-    public static boolean isExpirationDateIsComingToEnd(ProductLot lot, Date dateOfDeal) {
-        double k = 0.3;
+    public static boolean isFresh(ProductLot lot, Date dateOfDeal) {
+        double k = 0.75;
         long diffInHours  = TimeUnit.HOURS.convert(Math.abs(lot.getDateOfProduction().getTime() - dateOfDeal.getTime()), TimeUnit.MILLISECONDS);
-        if (diffInHours > lot.getShelLife() * 0.3) {
-            return true;
+        if (diffInHours > lot.getShelLife() * k) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public Boolean getFinished() {
